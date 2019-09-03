@@ -1,0 +1,15 @@
+.collection-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.vote-box {
+  display: flex;
+  align-items: flex-end;
+}
+
+i {
+  cursor: pointer;
+  user-select: none;
+}

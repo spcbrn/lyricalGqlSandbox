@@ -1,3 +1,4 @@
+import "./style/style.css";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Router, Route, hashHistory, IndexRoute } from "react-router";
@@ -9,14 +10,13 @@ import { ApolloProvider } from "react-apollo";
 import App from "./components/App";
 import SongCreate from "./components/SongCreate";
 import SongList from "./components/SongList";
+import SongDetail from "./components/SongDetail";
 
-const cache = new InMemoryCache();
-const link = new HttpLink({
-  uri: "http://localhost:4000/graphql"
-});
 const client = new ApolloClient({
-  cache,
-  link
+  cache: new InMemoryCache({
+    dataIdFromObject: o => o.id
+  }),
+  link: new HttpLink()
 });
 
 const Root = () => {
@@ -26,6 +26,7 @@ const Root = () => {
         <Route path="/" component={App}>
           <IndexRoute component={SongList} />
           <Route path="songs/new" component={SongCreate} />
+          <Route path="songs/:id" component={SongDetail} />
         </Route>
       </Router>
     </ApolloProvider>
