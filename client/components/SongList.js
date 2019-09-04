@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router";
 import { gqlLink } from "./../gql/store";
-import { Song } from "./../gql/reducer";
+
+import { fetchSongs } from "./../gql/queries";
 
 const SongList = props => {
-  console.log(props);
-  useEffect(() => {
-    props.fetchSongs();
-  }, []);
   const { songs } = props.data;
+  useEffect(() => {
+    !songs.length && props.fetchSongs();
+  }, []);
   if (!songs.length)
     return (
       <ul className="collection">
@@ -41,32 +41,6 @@ const SongList = props => {
       </Link>
     </div>
   );
-};
-
-// TO DO: simplify/clean up...DRY
-
-// const fetchSongList = Song.composeQuery({
-//   operation:
-// })
-
-const fetchSongs = () => {
-  const operation = "fetchSongs";
-  return {
-    type: Song,
-    operation,
-    run: () =>
-      Song.createQuery({
-        operation,
-        query: `
-        query fetchSongs {
-          songs {
-            id
-            title
-          }
-        }
-      `
-      })
-  };
 };
 
 export default gqlLink([fetchSongs], SongList);

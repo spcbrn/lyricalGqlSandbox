@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link, hashHistory } from "react-router";
-// import { graphql } from "react-apollo";
+import { gqlLink } from "./../gql/store";
+import { Song } from "../gql/schema/Song";
 
-import addSong from "./../mutations/addSong";
-import fetchSongs from "./../queries/fetchSongs";
+import { fetchSongs } from "./../gql/queries";
 
 const SongCreate = props => {
   const [title, titleInput] = useState(() => "");
@@ -11,12 +11,7 @@ const SongCreate = props => {
   const handleSubmit = e => {
     e.preventDefault();
     if (!title) return;
-    props
-      .mutate({
-        variables: { title },
-        refetchQueries: [{ query: fetchSongs }]
-      })
-      .then(() => hashHistory.push("/"));
+    props.addSong({ title }).then(() => hashHistory.push("/"));
     titleInput("");
   };
 
@@ -32,4 +27,18 @@ const SongCreate = props => {
   );
 };
 
-export default SongCreate;
+const addSong = {
+  operation: "addSong",
+  type: Song,
+  root: "addSong",
+  gql: ({ title }) => `
+    mutation addSong {
+      addSong(title: "${title}") {
+        id
+        title
+      }
+    }
+  `
+};
+
+export default gqlLink([addSong, fetchSongs], SongCreate);
