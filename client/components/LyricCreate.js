@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { graphql } from "react-apollo";
+// import { graphql } from "react-apollo";
 
 import addSongLyric from "../mutations/addSongLyric";
 import fetchSong from "./../queries/fetchSong";
@@ -27,4 +27,4 @@ const LyricCreate = props => {
   );
 };
 
-export default graphql(addSongLyric)(LyricCreate);
+export default LyricCreate;

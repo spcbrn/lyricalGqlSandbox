@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router";
-import { graphql } from "react-apollo";
+// import { graphql } from "react-apollo";
 
 import LyricCreate from "./LyricCreate";
 import LyricList from "./LyricList";
@@ -24,4 +24,5 @@ const SongDetail = props => {
   );
 };
 
-export default graphql(fetchSong, options)(SongDetail);
+export default SongDetail;
+// export default graphql(fetchSong, options)(SongDetail);

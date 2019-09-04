@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, hashHistory } from "react-router";
-import { graphql } from "react-apollo";
+// import { graphql } from "react-apollo";
 
 import addSong from "./../mutations/addSong";
 import fetchSongs from "./../queries/fetchSongs";
@@ -32,4 +32,4 @@ const SongCreate = props => {
   );
 };
 
-export default graphql(addSong)(SongCreate);
+export default SongCreate;

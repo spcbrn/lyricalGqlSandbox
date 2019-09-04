@@ -1,5 +1,5 @@
 import React from "react";
-import { graphql } from "react-apollo";
+// import { graphql } from "react-apollo";
 
 import likeLyric from "./../mutations/likeLyric";
 
@@ -33,7 +33,8 @@ const LyricList = ({ lyrics, mutate }) => {
         </span>
       </li>
     ));
+
   return <ul className="collection">{renderLyrics()}</ul>;
 };
 
-export default graphql(likeLyric)(LyricList);
+export default LyricList;
