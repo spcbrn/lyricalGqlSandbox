@@ -25,14 +25,12 @@ const updateIndex = ({ cache, data, index }) => {
       });
       break;
     }
+    case "update":
     case "add": {
       newIndex = Object.assign({}, index);
       if (data instanceof Array) {
         data.forEach(item => (newIndex[item.id] = item));
       } else newIndex[data.id] = data;
-      break;
-    }
-    case "update": {
       break;
     }
     case "delete": {

@@ -1,18 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router";
-// import { graphql } from "react-apollo";
+import { gqlLink } from "./../gql/store";
+import { Song } from "./../gql/schema/Song";
 
-import LyricCreate from "./LyricCreate";
 import LyricList from "./LyricList";
-
-import fetchSong from "./../queries/fetchSong";
-const options = {
-  options: props => ({ variables: { id: props.params.id } })
-};
+import LyricCreate from "./LyricCreate";
 
 const SongDetail = props => {
-  const { loading, song } = props.data;
-  if (loading) return null;
+  useEffect(() => {
+    props.fetchSong({ id: props.routeParams.id });
+  }, []);
+
+  if (!props.data.songs.length) return null;
+  const song = props.data.songs.find(c => c.id === props.routeParams.id);
+  if (!song.lyrics) return null;
 
   return (
     <div>
@@ -27,7 +28,7 @@ const SongDetail = props => {
 export const fetchSong = {
   operation: "fetchSong",
   type: Song,
-  root: ["song", "lyrics"],
+  root: "song",
   gql: ({ id }) => ({
     query: `
       query fetchSong {
@@ -49,5 +50,5 @@ export const fetchSong = {
   })
 };
 
-export default SongDetail;
+export default gqlLink([fetchSong], SongDetail);
 // export default graphql(fetchSong, options)(SongDetail);
