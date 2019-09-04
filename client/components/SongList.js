@@ -2,10 +2,6 @@ import React, { useEffect } from "react";
 import { Link } from "react-router";
 import { gqlLink } from "./../gql/store";
 import { Song } from "./../gql/reducer";
-// import { graphql } from "react-apollo";
-
-// import fetchSongs from "./../queries/fetchSongs";
-// import deleteSong from "./../mutations/deleteSong";
 
 const SongList = props => {
   console.log(props);
@@ -47,6 +43,12 @@ const SongList = props => {
   );
 };
 
+// TO DO: simplify/clean up...DRY
+
+// const fetchSongList = Song.composeQuery({
+//   operation:
+// })
+
 const fetchSongs = () => {
   const operation = "fetchSongs";
   return {
@@ -68,4 +70,3 @@ const fetchSongs = () => {
 };
 
 export default gqlLink([fetchSongs], SongList);
-// export default graphql(deleteSong)(graphql(fetchSongs)(SongList));
