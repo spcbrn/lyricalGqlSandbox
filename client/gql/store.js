@@ -37,17 +37,19 @@ const mapOperationsToProps = queries =>
 
 // Takes in an array of query objects and a component to be connected
 export const gqlLink = (queries, Component) => {
-  console.log(queries);
   // track names and typenames of query return data types for mapping index data to props
   const names = [];
   // iterate through list of passed in queries and use type class to generate action creator
-  const queryList = queries.map(query => {
-    const { operation, type, root, gql } = query;
+  const queryList = queries.map(q => {
+    const { operation, type, root, gql } = q;
     const { composeQuery, dataname, typename } = type;
     names.push([dataname, typename]);
     return {
       operation,
-      run: params => composeQuery({ operation, root, query: gql(params) })
+      run: params => {
+        const { query, cache } = gql(params);
+        return composeQuery({ operation, root, query, cache });
+      }
     };
   });
 

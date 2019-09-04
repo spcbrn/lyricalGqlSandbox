@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router";
 import { gqlLink } from "./../gql/store";
+import { Song } from "./../gql/schema/Song";
 
 import { fetchSongs } from "./../gql/queries";
 
 const SongList = props => {
   const { songs } = props.data;
   useEffect(() => {
-    !songs.length && props.fetchSongs();
+    props.fetchSongs();
   }, []);
   if (!songs.length)
     return (
@@ -16,12 +17,7 @@ const SongList = props => {
       </ul>
     );
 
-  // const handleDeleteSong = id =>
-  //   props
-  //     .mutate({
-  //       variables: { id }
-  //     })
-  //     .then(() => refetch());
+  const handleDeleteSong = id => props.deleteSong({ id });
 
   const renderSongs = () =>
     songs.map(song => (
@@ -43,4 +39,23 @@ const SongList = props => {
   );
 };
 
-export default gqlLink([fetchSongs], SongList);
+const deleteSong = {
+  operation: "deleteSong",
+  type: Song,
+  root: "deleteSong",
+  gql: ({ id }) => ({
+    query: `
+      mutation deleteSong {
+        deleteSong(id: "${id}") {
+          id
+        }
+      }
+    `,
+    cache: {
+      op: "delete",
+      key: id
+    }
+  })
+};
+
+export default gqlLink([deleteSong, fetchSongs], SongList);

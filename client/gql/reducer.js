@@ -9,20 +9,59 @@ const initialIndex = {
   }
 };
 
+/**
+ * fetch songs - replace entire SongType index
+ * add song - add new song to SongType index
+ * delete song - remove entry from SongType index
+ */
+
+const updateIndex = ({ cache, data, index }) => {
+  let newIndex;
+  switch (cache.op) {
+    case "replace": {
+      newIndex = {};
+      data.forEach(item => {
+        newIndex[item.id] = Object.assign(index[item.id] || {}, item);
+      });
+      break;
+    }
+    case "add": {
+      newIndex = Object.assign({}, index);
+      if (data instanceof Array) {
+        data.forEach(item => (newIndex[item.id] = item));
+      } else newIndex[data.id] = data;
+      break;
+    }
+    case "update": {
+      break;
+    }
+    case "delete": {
+      newIndex = Object.assign({}, index);
+      delete newIndex[cache.key];
+      break;
+    }
+    default:
+      return index;
+  }
+  return newIndex;
+};
+
 const reducer = (index = initialIndex, action) => {
   switch (action.type) {
     case SONG_TYPE: {
-      const { typename, data } = action;
+      const { typename, data, cache } = action;
       const { typenames } = index;
-      const nextIndex = Object.assign({}, typenames);
-      if (!nextIndex[typename]) nextIndex[typename] = {};
-      const typeIndex = nextIndex[typename];
-      const songs = data instanceof Array ? data : [data];
-      songs.forEach(song => {
-        typeIndex[song.id] = Object.assign(typeIndex[song.id] || {}, song);
+      const nextTypeIndex = Object.assign({}, typenames);
+      if (!nextTypeIndex[typename]) nextTypeIndex[typename] = {};
+
+      nextTypeIndex[typename] = updateIndex({
+        cache,
+        data,
+        index: nextTypeIndex[typename]
       });
+
       return {
-        typenames: nextIndex
+        typenames: nextTypeIndex
       };
     }
     default:

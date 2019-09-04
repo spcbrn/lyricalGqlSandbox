@@ -4,12 +4,17 @@ export const fetchSongs = {
   operation: "fetchSongs",
   type: Song,
   root: "songs",
-  gql: () => `
-    {
-      songs {
-        id
-        title
+  gql: () => ({
+    query: `
+      {
+        songs {
+          id
+          title
+        }
       }
+    `,
+    cache: {
+      op: "replace"
     }
-  `
+  })
 };

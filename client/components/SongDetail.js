@@ -24,5 +24,30 @@ const SongDetail = props => {
   );
 };
 
+export const fetchSong = {
+  operation: "fetchSong",
+  type: Song,
+  root: ["song", "lyrics"],
+  gql: ({ id }) => ({
+    query: `
+      query fetchSong {
+        song(id: "${id}") {
+          id
+          title
+          lyrics {
+            id
+            likes
+            content
+          }
+        }
+      }
+    `,
+    cache: {
+      op: "update",
+      id
+    }
+  })
+};
+
 export default SongDetail;
 // export default graphql(fetchSong, options)(SongDetail);

@@ -21,7 +21,11 @@ const SongCreate = props => {
       <h3>Create a New Song</h3>
       <form onSubmit={handleSubmit}>
         <label>Song Title:</label>
-        <input onChange={e => titleInput(e.target.value)} value={title} />
+        <input
+          autoFocus
+          onChange={e => titleInput(e.target.value)}
+          value={title}
+        />
       </form>
     </div>
   );
@@ -31,14 +35,19 @@ const addSong = {
   operation: "addSong",
   type: Song,
   root: "addSong",
-  gql: ({ title }) => `
-    mutation addSong {
-      addSong(title: "${title}") {
-        id
-        title
+  gql: ({ title }) => ({
+    query: `
+      mutation addSong {
+        addSong(title: "${title}") {
+          id
+          title
+        }
       }
+    `,
+    cache: {
+      op: "add"
     }
-  `
+  })
 };
 
 export default gqlLink([addSong, fetchSongs], SongCreate);

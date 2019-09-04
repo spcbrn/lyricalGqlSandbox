@@ -1,11 +1,11 @@
 import axios from "axios";
-import { SONG_TYPE } from "./typeIndex";
+import { LYRIC_TYPE } from "./typeIndex";
 
-class SongType {
+class LyricType {
   constructor() {
-    this.dataname = "songs";
-    this.typename = "SongType";
-    this.typeindex = SONG_TYPE;
+    this.dataname = "lyrics";
+    this.typename = "LyricType";
+    this.typeindex = LYRIC_TYPE;
 
     this.composeQuery = this.composeQuery.bind(this);
   }
@@ -31,5 +31,3 @@ class SongType {
       });
   }
 }
-
-export const Song = new SongType();
