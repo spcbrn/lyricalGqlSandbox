@@ -1,14 +1,12 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router";
 import { gqlLink } from "./../gql/store";
-import { Song } from "./../gql/schema/Song";
-
-import { fetchSongs } from "./../gql/queries";
+import { Song } from "../gql/schema/Song";
 
 const SongList = props => {
   const { songs } = props.data;
   useEffect(() => {
-    props.fetchSongs();
+    if (!songs.length) props.fetchSongs();
   }, []);
   if (!songs.length)
     return (
@@ -17,7 +15,7 @@ const SongList = props => {
       </ul>
     );
 
-  const handleDeleteSong = id => (false ? props.deleteSong({ id }) : null);
+  const handleDeleteSong = id => props.deleteSong({ id });
 
   const renderSongs = () =>
     songs.map(song => (
@@ -39,6 +37,25 @@ const SongList = props => {
   );
 };
 
+export const fetchSongs = {
+  operation: "fetchSongs",
+  type: Song,
+  root: "songs",
+  gql: () => ({
+    query: `
+      {
+        songs {
+          id
+          title
+        }
+      }
+    `,
+    cache: {
+      op: "replace"
+    }
+  })
+};
+
 const deleteSong = {
   operation: "deleteSong",
   type: Song,
@@ -58,23 +75,4 @@ const deleteSong = {
   })
 };
 
-const fetchSongList = {
-  operation: "fetchSongs",
-  type: Song,
-  root: "songs",
-  gql: () => ({
-    query: `
-      {
-        songs {
-          id
-          title
-        }
-      }
-    `,
-    cache: {
-      op: "replace"
-    }
-  })
-};
-
-export default gqlLink([fetchSongList], SongList);
+export default gqlLink([fetchSongs, deleteSong], SongList);

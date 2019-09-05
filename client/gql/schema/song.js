@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SONG_TYPE } from "./typeIndex";
+import { SONG_TYPE } from "./dataTypes";
 
 axios.interceptors.request.use(req => {
   if (req.url === "/graphql")

@@ -15,7 +15,7 @@ export const store = createStore(
  *  - register the queries in a matp object as they are redux actions under the hood DONE
  *  - if a single query, attach to component did mount ??
  *  - if single mutation, put on `mutation` function in props ??
- *  - create costom selector that puts together queried data for a given component ??
+ *  - create custom selector that puts together queried data for a given component ??
  */
 
 const mapIndexToProps = ({ names, index }) => {

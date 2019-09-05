@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router";
 import { gqlLink } from "./../gql/store";
-import { Song } from "./../gql/schema/Song";
+import { Song } from "../gql/schema/Song";
 
 import LyricList from "./LyricList";
 import LyricCreate from "./LyricCreate";
