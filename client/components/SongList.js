@@ -6,6 +6,7 @@ import { Song } from "./../gql/schema/Song";
 import { fetchSongs } from "./../gql/queries";
 
 const SongList = props => {
+  console.log(props);
   const { songs } = props.data;
   useEffect(() => {
     props.fetchSongs();
