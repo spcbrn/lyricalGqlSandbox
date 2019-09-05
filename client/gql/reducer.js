@@ -44,6 +44,14 @@ const updateIndex = ({ cache, data, index }) => {
   return newIndex;
 };
 
+/**
+ *
+ * When data arrives, run algorithm the traverses and finds '__typename',
+ * using that value and the associated record id to update the index
+ * with new data
+ *
+ */
+
 const reducer = (index = initialIndex, action) => {
   switch (action.type) {
     case SONG_TYPE: {

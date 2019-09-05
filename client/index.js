@@ -22,26 +22,6 @@ import SongDetail from "./components/SongDetail";
 //   link: new HttpLink()
 // });
 
-class GLink {
-  constructor({ index, uri }) {
-    this._uri = uri;
-    this._useIndex = index.use;
-    this._key = index.key;
-
-    if (this._useIndex) this._initializeDataIndex(this._key);
-  }
-
-  _initializeRegister() {
-    this._register = [];
-  }
-
-  _initializeDataIndex(key) {
-    this.index = {};
-  }
-
-  connect(child) {}
-}
-
 const Root = () => {
   return (
     // <ApolloProvider client={client}>

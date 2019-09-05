@@ -6,7 +6,6 @@ import { Song } from "./../gql/schema/Song";
 import { fetchSongs } from "./../gql/queries";
 
 const SongList = props => {
-  console.log(props);
   const { songs } = props.data;
   useEffect(() => {
     props.fetchSongs();
@@ -18,7 +17,7 @@ const SongList = props => {
       </ul>
     );
 
-  const handleDeleteSong = id => props.deleteSong({ id });
+  const handleDeleteSong = id => (false ? props.deleteSong({ id }) : null);
 
   const renderSongs = () =>
     songs.map(song => (
@@ -59,4 +58,23 @@ const deleteSong = {
   })
 };
 
-export default gqlLink([deleteSong, fetchSongs], SongList);
+const fetchSongList = {
+  operation: "fetchSongs",
+  type: Song,
+  root: "songs",
+  gql: () => ({
+    query: `
+      {
+        songs {
+          id
+          title
+        }
+      }
+    `,
+    cache: {
+      op: "replace"
+    }
+  })
+};
+
+export default gqlLink([fetchSongList], SongList);

@@ -8,6 +8,7 @@ export const fetchSongs = {
     query: `
       {
         songs {
+          __typename
           id
           title
         }
