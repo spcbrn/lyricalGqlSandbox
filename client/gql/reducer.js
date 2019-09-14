@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as _ from "lodash";
 
-import { SONG_TYPE } from "./schema/typeIndex";
+import { SONG_TYPE } from "./schema/dataTypes";
 
 const initialIndex = {
   typenames: {
@@ -20,17 +20,26 @@ const updateIndex = ({ cache, data, index }) => {
   switch (cache.op) {
     case "replace": {
       newIndex = {};
-      data.forEach(item => {
-        newIndex[item.id] = Object.assign(index[item.id] || {}, item);
-      });
+      data.forEach(
+        item => (newIndex[item.id] = Object.assign(index[item.id] || {}, item))
+      );
       break;
     }
-    case "update":
-    case "add": {
+    case "merge": {
       newIndex = Object.assign({}, index);
-      if (data instanceof Array) {
+      if (data instanceof Array)
+        data.forEach(item =>
+          (newIndex[item.id] = Object.assign(index[item.id], item))
+        );
+      else newIndex[data.id] = Object.assign(index[data.id], data);
+      break;
+    }
+    case "insert":
+    case "update": {
+      newIndex = Object.assign({}, index);
+      if (data instanceof Array)
         data.forEach(item => (newIndex[item.id] = item));
-      } else newIndex[data.id] = data;
+      else newIndex[data.id] = data;
       break;
     }
     case "delete": {
@@ -44,22 +53,28 @@ const updateIndex = ({ cache, data, index }) => {
   return newIndex;
 };
 
+/**
+ *
+ * When data arrives, run algorithm the traverses and finds '__typename',
+ * using that value and the associated record id to update the index
+ * with new data
+ */
+
 const reducer = (index = initialIndex, action) => {
   switch (action.type) {
     case SONG_TYPE: {
       const { typename, data, cache } = action;
       const { typenames } = index;
-      const nextTypeIndex = Object.assign({}, typenames);
-      if (!nextTypeIndex[typename]) nextTypeIndex[typename] = {};
-
-      nextTypeIndex[typename] = updateIndex({
+      const nextTypenameIndex = Object.assign({}, typenames);
+      if (!nextTypenameIndex[typename]) nextTypenameIndex[typename] = {};
+      nextTypenameIndex[typename] = updateIndex({
         cache,
         data,
-        index: nextTypeIndex[typename]
+        index: nextTypenameIndex[typename]
       });
 
       return {
-        typenames: nextTypeIndex
+        typenames: nextTypenameIndex
       };
     }
     default:

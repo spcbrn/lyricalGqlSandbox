@@ -3,8 +3,6 @@ import { Link, hashHistory } from "react-router";
 import { gqlLink } from "./../gql/store";
 import { Song } from "../gql/schema/Song";
 
-import { fetchSongs } from "./../gql/queries";
-
 const SongCreate = props => {
   const [title, titleInput] = useState(() => "");
 
@@ -45,9 +43,9 @@ const addSong = {
       }
     `,
     cache: {
-      op: "add"
+      op: "insert"
     }
   })
 };
 
-export default gqlLink([addSong, fetchSongs], SongCreate);
+export default gqlLink([addSong], SongCreate);
