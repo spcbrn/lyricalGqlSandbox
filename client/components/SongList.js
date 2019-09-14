@@ -1,25 +1,21 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router";
-import { graphql } from "react-apollo";
-
-import fetchSongs from "./../queries/fetchSongs";
-import deleteSong from "./../mutations/deleteSong";
+import { gqlLink } from "./../gql/store";
+import { Song } from "../gql/schema/Song";
 
 const SongList = props => {
-  const { loading, songs, refetch } = props.data;
-  if (loading)
+  const { songs } = props.data;
+  useEffect(() => {
+    if (!songs.length) props.fetchSongs();
+  }, []);
+  if (!songs.length)
     return (
       <ul className="collection">
         <li className="collection-item">Loading...</li>
       </ul>
     );
 
-  const handleDeleteSong = id =>
-    props
-      .mutate({
-        variables: { id }
-      })
-      .then(() => refetch());
+  const handleDeleteSong = id => props.deleteSong({ id });
 
   const renderSongs = () =>
     songs.map(song => (
@@ -41,4 +37,42 @@ const SongList = props => {
   );
 };
 
-export default graphql(deleteSong)(graphql(fetchSongs)(SongList));
+export const fetchSongs = {
+  operation: "fetchSongs",
+  type: Song,
+  root: "songs",
+  gql: () => ({
+    query: `
+      {
+        songs {
+          id
+          title
+        }
+      }
+    `,
+    cache: {
+      op: "replace"
+    }
+  })
+};
+
+const deleteSong = {
+  operation: "deleteSong",
+  type: Song,
+  root: "deleteSong",
+  gql: ({ id }) => ({
+    query: `
+      mutation deleteSong {
+        deleteSong(id: "${id}") {
+          id
+        }
+      }
+    `,
+    cache: {
+      op: "delete",
+      key: id
+    }
+  })
+};
+
+export default gqlLink([fetchSongs, deleteSong], SongList);
