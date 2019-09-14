@@ -25,8 +25,15 @@ const updateIndex = ({ cache, data, index }) => {
       );
       break;
     }
-    case "merge":
-      return index;
+    case "merge": {
+      newIndex = Object.assign({}, index);
+      if (data instanceof Array)
+        data.forEach(item =>
+          (newIndex[item.id] = Object.assign(index[item.id], item))
+        );
+      else newIndex[data.id] = Object.assign(index[data.id], data);
+      break;
+    }
     case "insert":
     case "update": {
       newIndex = Object.assign({}, index);
@@ -67,7 +74,7 @@ const reducer = (index = initialIndex, action) => {
       });
 
       return {
-        typenames: nextTypeIndex
+        typenames: nextTypenameIndex
       };
     }
     default:

@@ -1,5 +1,11 @@
 import axios from "axios";
-import { LYRIC_TYPE } from "./typeIndex";
+import { LYRIC_TYPE } from "./dataTypes";
+
+// axios.interceptors.request.use(req => {
+//   if (req.url === "/graphql")
+//     req.data.query = req.data.query.replace(/(id\n)/g, `__typename\n id\n`);
+//   return req;
+// });
 
 class LyricType {
   constructor() {
@@ -31,3 +37,5 @@ class LyricType {
       });
   }
 }
+
+export const Lyric = new LyricType();
